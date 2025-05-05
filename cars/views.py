@@ -1,7 +1,10 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters, generics
+from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.models import User
 from .models import Car
-from .serializers import CarSerializer
+from .serializers import CarSerializer, RegisterSerializer
+from .filters import CarFilter
 
 
 # Create your views here.
@@ -10,7 +13,16 @@ class CarViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer  # Serializador que se usará para este modelo
 
     # Opcionalmente, puedes personalizar filtros, permisos o acciones aquí.
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['brand', 'model', 'year', 'city', 'state']  # Campos por los que se puede filtrar
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = CarFilter  # Filtros personalizados para el modelo Car
+
+    # Campos permitidos para ordenar
+    ordering_fields = ['price', 'year', 'mileage', 'created_at']
+    ordering = ['-created_at']  # Orden predeterminado
 
 
+# RegisterView es la vista para el registro de usuarios
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]

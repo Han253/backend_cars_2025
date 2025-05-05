@@ -6,7 +6,7 @@ class Car(models.Model):
     brand = models.CharField(max_length=100)       # Marca
     model = models.CharField(max_length=100)       # Modelo
     year = models.PositiveIntegerField()           # Año de fabricación
-    price = models.DecimalField(max_digits=10, decimal_places=2) # Precio
+    price = models.DecimalField(max_digits=12, decimal_places=2) # Precio
     mileage = models.PositiveIntegerField()        # Kilometraje
     description = models.TextField(blank=True)   # Descripción
     image = models.ImageField(upload_to='car_images/', blank=True, null=True)

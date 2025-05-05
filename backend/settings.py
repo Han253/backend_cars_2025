@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +32,9 @@ ALLOWED_HOSTS = []
 
 #Configuracion de CORS
 CORS_ALLOW_ALL_ORIGINS = True
+
+#Configuracion sesión
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -110,14 +114,33 @@ AUTH_PASSWORD_VALIDATORS = [
 #Configuración Django Rest Framework
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'cars.pagination.CustomPagination',
+    'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Cambia a IsAuthenticated cuando uses JWT
+        'rest_framework.permissions.IsAuthenticated',  # Requiere JWT o sesión para acceder
     ],
+}
+
+
+#Configuración JWT
+SIMPLE_JWT = {
+    # Duración del access token (token de acceso que se envía en cada petición protegida)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    # Duración del refresh token (sirve para obtener nuevos access tokens sin iniciar sesión de nuevo)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    # Si es True, se generará un nuevo refresh token cada vez que se use uno válido (rotación)
+    # Útil para mejorar seguridad y permitir revocación de tokens comprometidos.
+    'ROTATE_REFRESH_TOKENS': False,
+    # Si es True, el refresh token anterior se invalida (lista negra) después de ser rotado
+    # Solo se aplica si ROTATE_REFRESH_TOKENS es True.
+    'BLACKLIST_AFTER_ROTATION': False,
+    #Define el prefijo del token en la cabecera de autorización
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 # Internationalization
