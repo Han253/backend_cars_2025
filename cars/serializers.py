@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Car
 from django.contrib.auth.models import User
 
@@ -22,3 +23,15 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+# Para personalizar el token JWT
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Añadir campos personalizados al payload del token
+        token['username'] = user.username
+        token['email'] = user.email
+
+        return token
