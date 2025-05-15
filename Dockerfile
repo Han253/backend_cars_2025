@@ -1,12 +1,12 @@
 FROM python:3.11-slim
 
-RUN mkdir /backend
-WORKDIR /backend
+RUN mkdir /home/backend
+WORKDIR /home/backend
 
-ADD requirements.txt /backend/
+ADD requirements.txt /home/backend/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY static /home/backend/staticfiles
+COPY staticfiles /home/backend/staticfiles
 ENV TZ=America/Bogota
 
-ADD . /backend/
+ADD . /home/backend/
