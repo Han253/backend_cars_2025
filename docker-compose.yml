@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  django_app:
+    container_name: django_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      bash -c "gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static_volume:/home/backend/staticfiles
+    expose: 
+      - "8000"
+    networks:
+      - cars_network
+  
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "8040:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/home/backend/staticfiles
+    depends_on:
+      - django_app
+    networks:
+      - cars_network
+
+volumes:
+  static_volume:
+    driver: local
+
+networks:
+  cars_network:
+    driver: bridge

@@ -26,15 +26,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h(x325cnclwq@igb5#5bhtougi$z5qk^#3cc1g*od^xo+-s@hn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'nginx']
 
 #Configuracion de CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
 #Configuracion sesión
 CORS_ALLOW_CREDENTIALS = True
+
+#Configuración CSRF
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8040']
 
 # Application definition
 
@@ -158,7 +161,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+#PARA DESARROLLO
+#STATIC_URL = 'static/'
+
+# PARA PRODUCCIÓN
+STATIC_URL = '/static/'
+STATIC_ROOT = '/home/backend/staticfiles'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
